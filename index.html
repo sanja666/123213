@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ePakalpojumi+ DEMO</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="banner" id="session-banner" role="alert" hidden></div>
+  <header class="app-header">
+    <div class="logo" id="logo" tabindex="0" title="ePakalpojumi+">
+      <img src="assets/img/logo.svg" alt="ePakalpojumi+" width="48" height="48">
+      <div>
+        <h1 data-i18n="header.title">ePakalpojumi+ DEMO</h1>
+        <span data-i18n="header.subtitle">Oficiāla simulācija apmācībai</span>
+      </div>
+    </div>
+    <nav class="main-nav" aria-label="Galvenā navigācija">
+      <button class="nav-link" data-view="services" data-i18n="nav.services">Pakalpojumi</button>
+      <button class="nav-link" data-view="payments" data-i18n="nav.payments">Maksājumi</button>
+      <button class="nav-link" data-view="cases" data-i18n="nav.cases">Lietas</button>
+      <button class="nav-link" data-view="casino" data-i18n="nav.casino">Kazino</button>
+      <button class="nav-link" data-view="documents" data-i18n="nav.documents">Dokumenti</button>
+      <button class="nav-link" data-view="profile" data-i18n="nav.profile">Profils</button>
+      <button class="nav-link" data-view="admin" data-role="administrators" data-i18n="nav.admin">Administrators</button>
+    </nav>
+    <div class="header-controls">
+      <div class="language-switcher" role="group" aria-label="Valodas izvēle">
+        <button data-lang="lv" class="lang-btn active">LV</button>
+        <button data-lang="ru" class="lang-btn">RU</button>
+      </div>
+      <button id="logout-btn" class="logout" data-i18n="header.logout">Izrakstīties</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="login-view" class="view active" aria-labelledby="login-title">
+      <article class="login-card">
+        <h2 id="login-title" data-i18n="login.title">Droša pieslēgšana</h2>
+        <p class="disclaimer" data-i18n="global.disclaimer">Šis ir demonstrācijas režīms. Visi dati ir simulēti.</p>
+        <div class="login-tabs" role="tablist">
+          <button role="tab" aria-selected="true" class="tab-btn" data-target="demo" data-i18n="login.demo">Demo konts</button>
+          <button role="tab" aria-selected="false" class="tab-btn" data-target="smartid" data-i18n="login.smartId">Smart-ID</button>
+          <button role="tab" aria-selected="false" class="tab-btn" data-target="eparaksts" data-i18n="login.eparaksts">eParaksts</button>
+          <button role="tab" aria-selected="false" class="tab-btn" data-target="sms" data-i18n="login.sms">SMS-OTP</button>
+        </div>
+        <div class="tab-panels">
+          <form id="demo-form" class="tab-panel active" data-method="demo" autocomplete="off">
+            <label for="demo-user" data-i18n="login.username">Lietotājs</label>
+            <input id="demo-user" name="user" required>
+            <label for="demo-pass" data-i18n="login.password">Parole</label>
+            <input id="demo-pass" name="pass" type="password" required>
+            <p class="hint" data-i18n="login.demoHint">Pieejams: user/1234 vai admin/1234</p>
+            <button type="submit" class="primary" data-i18n="login.submit">Pieslēgties</button>
+          </form>
+          <form id="smartid-form" class="tab-panel" data-method="smartid">
+            <label for="smartid-pk" data-i18n="login.smartIdPk">Personas kods</label>
+            <input id="smartid-pk" name="pk" pattern="[0-9]{6}-[0-9]{5}" placeholder="010199-12345" required>
+            <label for="smartid-name" data-i18n="login.smartIdName">Vārds, uzvārds</label>
+            <input id="smartid-name" name="name" required>
+            <button type="submit" class="primary" data-i18n="login.smartIdSubmit">Apstiprināt</button>
+          </form>
+          <form id="eparaksts-form" class="tab-panel" data-method="eparaksts">
+            <label for="eparaksts-id" data-i18n="login.eparakstsId">eParaksts ID</label>
+            <input id="eparaksts-id" name="id" placeholder="EP-LV-DEMO-0001" required>
+            <button type="submit" class="primary" data-i18n="login.eparakstsSubmit">Parakstīt</button>
+          </form>
+          <form id="sms-form" class="tab-panel" data-method="sms">
+            <label for="sms-phone" data-i18n="login.smsPhone">Tālrunis</label>
+            <input id="sms-phone" name="phone" pattern="[0-9]{8,12}" required>
+            <button type="submit" class="primary" data-i18n="login.smsSend">Sūtīt kodu</button>
+            <div class="otp-entry" hidden>
+              <label for="sms-otp" data-i18n="login.smsCode">Ievadiet kodu</label>
+              <input id="sms-otp" name="otp" required>
+              <button type="button" id="sms-verify" class="primary" data-i18n="login.smsVerify">Apstiprināt</button>
+            </div>
+          </form>
+        </div>
+      </article>
+    </section>
+
+    <section id="services" class="view" aria-labelledby="services-title">
+      <header class="view-header">
+        <h2 id="services-title" data-i18n="services.title">Pakalpojumi</h2>
+        <p data-i18n="services.subtitle">Izvēlieties un piesakiet nepieciešamo pakalpojumu. Viss tiek apstrādāts simulācijā.</p>
+      </header>
+      <div class="service-list" id="service-list"></div>
+    </section>
+
+    <section id="payments" class="view" aria-labelledby="payments-title">
+      <header class="view-header">
+        <h2 id="payments-title" data-i18n="payments.title">Maksājumi un parādi</h2>
+        <div class="wallet">
+          <div>
+            <span data-i18n="payments.balance">Bilance:</span>
+            <strong id="wallet-balance">0.00 €</strong>
+          </div>
+          <div class="wallet-actions">
+            <button class="primary" id="wallet-topup" data-i18n="payments.topup">Papildināt bilanci</button>
+            <button class="secondary" id="wallet-withdraw" data-i18n="payments.withdraw">Izmaksāt</button>
+          </div>
+        </div>
+      </header>
+      <div class="tables">
+        <section>
+          <h3 data-i18n="payments.open">Atvērtie maksājumi</h3>
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="table.date">Datums</th>
+                <th data-i18n="table.description">Apraksts</th>
+                <th data-i18n="table.amount">Summa</th>
+                <th data-i18n="table.status">Statuss</th>
+                <th data-i18n="table.actions">Darbības</th>
+              </tr>
+            </thead>
+            <tbody id="open-payments"></tbody>
+          </table>
+        </section>
+        <section>
+          <h3 data-i18n="payments.history">Maksājumu vēsture</h3>
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="table.date">Datums</th>
+                <th data-i18n="table.type">Tips</th>
+                <th data-i18n="table.amount">Summa</th>
+                <th data-i18n="table.status">Statuss</th>
+              </tr>
+            </thead>
+            <tbody id="payment-history"></tbody>
+          </table>
+        </section>
+      </div>
+    </section>
+
+    <section id="cases" class="view" aria-labelledby="cases-title">
+      <header class="view-header">
+        <h2 id="cases-title" data-i18n="cases.title">Lietas un sankcijas</h2>
+        <p data-i18n="cases.disclaimer">Visi tiesvedības dati ir simulēti mācību nolūkiem.</p>
+      </header>
+      <div class="case-list" id="case-list"></div>
+    </section>
+
+    <section id="casino" class="view" aria-labelledby="casino-title">
+      <header class="view-header">
+        <h2 id="casino-title" data-i18n="casino.title">Kazino "Sekas"</h2>
+        <p data-i18n="casino.disclaimer">Spēles rezultāts ietekmē jūsu simulētos maksājumus un lietas.</p>
+      </header>
+      <div class="casino-tabs" role="tablist">
+        <button class="tab-btn active" role="tab" data-target="roulette" data-i18n="casino.roulette">Rulete</button>
+        <button class="tab-btn" role="tab" data-target="lottery" data-i18n="casino.lottery">Loterija</button>
+        <button class="tab-btn" role="tab" data-target="double" data-i18n="casino.double">Double</button>
+      </div>
+      <div class="tab-panels">
+        <div id="roulette" class="tab-panel active">
+          <button class="primary" id="spin-roulette" data-i18n="casino.play">Spēlēt</button>
+        </div>
+        <div id="lottery" class="tab-panel">
+          <button class="primary" id="play-lottery" data-i18n="casino.buyTicket">Pirkt biļeti (1€)</button>
+        </div>
+        <div id="double" class="tab-panel">
+          <button class="primary" id="play-double" data-i18n="casino.doublePlay">Mēģināt dubultot</button>
+        </div>
+      </div>
+      <section class="history">
+        <h3 data-i18n="casino.history">Kazino vēsture</h3>
+        <ul id="casino-history"></ul>
+      </section>
+    </section>
+
+    <section id="documents" class="view" aria-labelledby="documents-title">
+      <header class="view-header">
+        <h2 id="documents-title" data-i18n="documents.title">Dokumenti un paziņojumi</h2>
+      </header>
+      <div class="document-list" id="document-list"></div>
+    </section>
+
+    <section id="profile" class="view" aria-labelledby="profile-title">
+      <header class="view-header">
+        <h2 id="profile-title" data-i18n="profile.title">Profils</h2>
+        <span class="badge" id="ui-arrest" hidden data-i18n="profile.restricted">Pagaidu ierobežojums</span>
+      </header>
+      <form id="profile-form">
+        <div class="form-grid">
+          <label>
+            <span data-i18n="profile.name">Vārds</span>
+            <input id="profile-name" required>
+          </label>
+          <label>
+            <span data-i18n="profile.surname">Uzvārds</span>
+            <input id="profile-surname" required>
+          </label>
+          <label>
+            <span data-i18n="profile.pk">Personas kods</span>
+            <input id="profile-pk" required>
+          </label>
+          <label>
+            <span data-i18n="profile.address">Deklarētā adrese</span>
+            <input id="profile-address" required>
+          </label>
+          <label>
+            <span data-i18n="profile.email">E-pasts</span>
+            <input id="profile-email" type="email" required>
+          </label>
+          <label>
+            <span data-i18n="profile.phone">Tālrunis</span>
+            <input id="profile-phone" required>
+          </label>
+        </div>
+        <button type="submit" class="primary" data-i18n="profile.save">Saglabāt izmaiņas</button>
+      </form>
+    </section>
+
+    <section id="admin" class="view" aria-labelledby="admin-title">
+      <header class="view-header">
+        <h2 id="admin-title" data-i18n="admin.title">Administrators</h2>
+      </header>
+      <div class="admin-grid">
+        <section>
+          <h3 data-i18n="admin.probabilities">Izmaiņu varbūtības</h3>
+          <div class="probability-controls" id="probability-controls"></div>
+        </section>
+        <section>
+          <h3 data-i18n="admin.triggers">Ātrie rīki</h3>
+          <button class="secondary" data-trigger="fine" data-i18n="admin.triggerFine">Sagenērtēt jaunu maksu</button>
+          <button class="secondary" data-trigger="case" data-i18n="admin.triggerCase">Izveidot lietu</button>
+          <button class="secondary" data-trigger="hearing" data-i18n="admin.triggerHearing">Uzreiz rīkot sēdi</button>
+          <button class="secondary" data-trigger="release" data-i18n="admin.triggerRelease">Noņemt UI ierobežojumu</button>
+          <button class="danger" data-trigger="reset" data-i18n="admin.triggerReset">Dzēst datus</button>
+        </section>
+        <section>
+          <h3 data-i18n="admin.catalog">Pakalpojumu katalogs</h3>
+          <div id="admin-services"></div>
+        </section>
+        <section>
+          <h3 data-i18n="admin.logs">Žurnāls</h3>
+          <ul id="admin-log"></ul>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p data-i18n="global.footer">Šis ir demonstrācijas režīms. Visi maksājumi un juridiskie rezultāti ir simulēti.</p>
+  </footer>
+
+  <dialog id="modal" aria-modal="true">
+    <form method="dialog">
+      <h3 id="modal-title"></h3>
+      <div id="modal-content"></div>
+      <menu>
+        <button value="cancel" data-i18n="modal.cancel">Atcelt</button>
+        <button value="confirm" class="primary" data-i18n="modal.confirm">Apstiprināt</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <template id="toast-template">
+    <div class="toast" role="status"></div>
+  </template>
+
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
